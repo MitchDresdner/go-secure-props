@@ -4,7 +4,7 @@
 ### Usage
 
 `propsec -h`
-
+ 
 ```
 NAME:
    propsec - Encode/Decode application properties
