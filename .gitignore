@@ -1,0 +1,18 @@
+# Binaries, plugins, libs
+*.dll
+*.dylib
+*.exe
+*.exe~
+*.so
+
+# Code coverage
+*.out
+
+# Idea
+.idea
+
+*.DS_store
+
+# Testing
+*.test
+*.tmp
