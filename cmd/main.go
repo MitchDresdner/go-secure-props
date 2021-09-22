@@ -2,17 +2,35 @@ package main
 
 import (
 	"fmt"
+	"github.com/MitchDresdner/secure-props/internal/config"
 	"github.com/MitchDresdner/secure-props/internal/security"
-	"github.com/magiconair/properties"
 	"log"
 	"os"
-	"strings"
+	"runtime"
 )
 
 const NONCE_SIZE = 8
 
+var app config.AppConfig
+
+const securePropsVersion = "1.0.0"
+const maxWorkerPoolSize = 5
+const maxJobMaxWorkers = 5
+
+func init() {
+	//gob.Register(models.User{})
+	_ = os.Setenv("TZ", "America/NewYork")
+}
+
 func main() {
 
+	args := cmdLine()
+	appInit(args)
+
+	fmt.Println("Done")
+}
+
+func cmdLine() map[string]string {
 	app, args, err := parseArgs()
 	if err != nil {
 		fmt.Println("main::parseArgs", err)
@@ -49,38 +67,17 @@ func main() {
 
 		fmt.Println("Secret is:", msg)
 	}
+
+	return args
 }
 
-// props playing with properties
-func props() {
-
-	loc, _ := os.Getwd()
-	myEnv := getEnv()
-	fmt.Println("Running in ", myEnv, loc)
-
-	p := properties.MustLoadFile("./config/dev.properties", properties.UTF8)
-	p.SetComment("db.host", "Database hostname")
-	fmt.Println("-- Props ", p.GetString("db.host", "unk host"), p.GetComment("db.host"),p.GetInt("db.port", -99))
-
-	p.SetValue("my.prop", "hello prop")
-	fmt.Println("-- Props ", p.GetString("my.prop", "unk my.prop"))
-
-	for k, v := range p.Map() {
-		fmt.Println( k, ": ",v, p.GetComment(k) )
-		if strings.HasPrefix(v, "![") && strings.HasSuffix(v, "]") {
-			fmt.Println("Shhh ...")
-		}
-	}
-}
-
-// getEnv sets the default environment
-//  See others:
-//		https://github.com/joho/godotenv
-//		https://github.com/spf13/viper
-func getEnv() string{
-	env := os.Getenv("APP_ENV")
-	if "" == env {
-		env = "dev"
-	}
-	return env
+// banner display
+func banner() {
+	// print info
+	log.Printf("******************************************")
+	log.Printf("** %sSecureProps%s v%s built in %s", "\033[31m", "\033[0m", securePropsVersion, runtime.Version())
+	log.Printf("**----------------------------------------")
+	log.Printf("** Running with %d Processors", runtime.NumCPU())
+	log.Printf("** Running on %s", runtime.GOOS)
+	log.Printf("******************************************")
 }
