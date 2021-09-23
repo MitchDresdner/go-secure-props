@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 	"github.com/MitchDresdner/secure-props/internal/config"
+	"github.com/MitchDresdner/secure-props/internal/handlers"
 	"github.com/MitchDresdner/secure-props/internal/security"
 	"log"
 	"os"
 	"runtime"
 )
 
-const NONCE_SIZE = 8
-
 var app config.AppConfig
+var repo *handlers.DBRepo
 
 const securePropsVersion = "1.0.0"
 const maxWorkerPoolSize = 5

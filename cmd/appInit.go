@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/MitchDresdner/secure-props/internal/config"
 	"github.com/MitchDresdner/secure-props/internal/driver"
+	"github.com/MitchDresdner/secure-props/internal/handlers"
 	"github.com/MitchDresdner/secure-props/internal/security"
 	"github.com/magiconair/properties"
 	"log"
@@ -58,13 +59,17 @@ func appInit(args map[string]string) (*string, error) {
 	// define application configuration
 	a := config.AppConfig{
 		DB:           db,
-		InProduction: false,       // pass as flag: *inProduction,
-		Domain:       "localhost", // pass as flag or envvar: *domain,
-		Version:      securePropsVersion,
+		Domain:       "localhost",   // pass as flag or envvar: *domain,
 		Identifier:   "secureProps", // pass as unique instance id: *identifier,
+		InProduction: false,         // pass as flag: *inProduction,
+		Properties:   p,
+		Version:      securePropsVersion,
 	}
 
 	app = a
+
+	repo = handlers.NewPostgresqlHandlers(db, &app)
+	handlers.NewHandlers(repo, &app)
 
 	log.Println("Setting preferences...")
 	preferenceMap := make(map[string]string)
