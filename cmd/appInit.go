@@ -6,6 +6,7 @@ import (
 	"github.com/MitchDresdner/secure-props/internal/driver"
 	"github.com/MitchDresdner/secure-props/internal/handlers"
 	"github.com/MitchDresdner/secure-props/internal/security"
+	"github.com/MitchDresdner/secure-props/utils"
 	"github.com/magiconair/properties"
 	"log"
 	"os"
@@ -67,6 +68,8 @@ func appInit(args map[string]string) (*string, error) {
 	}
 
 	app = a
+
+	utils.NewState(&app)
 
 	repo = handlers.NewPostgresqlHandlers(db, &app)
 	handlers.NewHandlers(repo, &app)

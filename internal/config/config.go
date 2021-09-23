@@ -6,6 +6,7 @@ import (
 )
 
 type AppConfig struct {
+	ClArgs       map[string]string
 	DB           *driver.DB
 	InProduction bool
 	Environment  string
